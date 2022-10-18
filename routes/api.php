@@ -42,4 +42,5 @@ Route::group([
 ], function() {
     Route::post('getProducts', 'ProductController@getProducts');
     Route::post('createProduct', 'ProductController@createProduct');
+    Route::post('updateProduct', 'ProductController@updateProduct');
 });

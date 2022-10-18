@@ -46,6 +46,7 @@ class ProductController extends Controller
             $product->discount = $request->discount;
             $product->description = $request->description;
             $product->status = $request->status;
+            $product->created_by = auth()->user()->id;
 
             if ($request->file('image')) {
                 $file = $request->file('image');
@@ -57,6 +58,56 @@ class ProductController extends Controller
             $product->save();
 
             return $this->set_response($product, 200, 'success', ['Product created successfully']);
+
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+
+            return \redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function updateProduct(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:products,id',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
+            'name' => 'required',
+            'price' => 'required',
+            'vat' => 'required',
+            'discount' => 'required',
+            'description' => 'required',
+            'image' => 'required',
+            'status' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->set_response(null, 422, 'failed', $validator->errors()->all());
+        }
+
+        try {
+            $product = Product::findOrFail($request->id);
+            $product->category_id = $request->category_id;
+            $product->brand_id = $request->brand_id;
+            $product->name = $request->name;
+            $product->price = $request->price;
+            $product->vat = $request->vat;
+            $product->discount = $request->discount;
+            $product->description = $request->description;
+            $product->status = $request->status;
+            $product->created_by = auth()->user()->id;
+
+            if ($request->file('image')) {
+                $file = $request->file('image');
+                @unlink(public_path('uploads/product_images/'.$product->image));
+                $fileName = date('YmdHi').$file->getClientOriginalName();
+                $file->move('uploads/product_images/', $fileName);
+                $product['image'] = $fileName;
+            }
+
+            $product->save();
+
+            return $this->set_response($product, 200, 'success', ['Product updated successfully']);
 
         } catch (\Exception $e) {
             dd($e->getMessage());
