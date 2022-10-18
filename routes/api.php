@@ -35,3 +35,10 @@ Route::group([
     });
 
 });
+
+//Product Routes
+Route::group([
+    'middleware' => 'auth:api',
+], function() {
+    Route::post('getProducts', 'ProductController@getProducts');
+});
