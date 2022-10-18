@@ -115,4 +115,16 @@ class ProductController extends Controller
             return \redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function deleteProduct(Request $request) {
+        $product = Product::findOrFail($request->id);
+
+        if(file_exists('uploads/product_images/' . $product->image) AND ! empty($product->image)){
+            unlink('uploads/product_images/' . $product->image);
+        }
+
+        $product->delete();
+
+        return $this->set_response($product, 200, 'success', ['Product deleted successfully']);
+    }
 }
