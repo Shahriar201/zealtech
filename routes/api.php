@@ -41,4 +41,5 @@ Route::group([
     'middleware' => 'auth:api',
 ], function() {
     Route::post('getProducts', 'ProductController@getProducts');
+    Route::post('createProduct', 'ProductController@createProduct');
 });
