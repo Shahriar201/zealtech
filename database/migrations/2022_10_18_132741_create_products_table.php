@@ -23,6 +23,7 @@ class CreateProductsTable extends Migration
             $table->string('discount');
             $table->string('image');
             $table->string('description');
+            $table->integer('status')->nullable()->comment('1=active, 0=inactive');
             $table->tinyInteger('created_by')->nullable();
             $table->tinyInteger('updated_by')->nullable();
             $table->timestamps();
